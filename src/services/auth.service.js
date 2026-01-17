@@ -82,6 +82,6 @@ export const createUser = async ({ name, email, password, role = 'user' }) => {
 
   } catch (error) {
     logger.error(`Error creating the user: ${error}`);
-    throw Error('Error hasing');
+    throw error;
   }
 };

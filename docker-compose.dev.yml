@@ -1,0 +1,37 @@
+version: "3.9"
+
+services:
+  neon-local:
+    image: neondatabase/neon_local:latest
+    container_name: neon-local
+    # Expose Neon Local on localhost:5432 for tools like psql
+    ports:
+      - "5432:5432"
+    # All required env vars are loaded from .env.development
+    env_file:
+      - .env.development
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    container_name: acquisitions-app-dev
+    depends_on:
+      - neon-local
+    env_file:
+      - .env.development
+    environment:
+      # In dev we connect to Neon Local inside the compose network
+      DATABASE_URL: ${DATABASE_URL:-postgres://neon:npg@neon-local:5432/acquisitions}
+    # command: ["node", "--watch", "src/server.js"]
+    ports:
+      - "3000:3000"
+    # Live-reload friendly: mount source into container
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+
+networks:
+  default:
+    name: acquisitions-dev-net

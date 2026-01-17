@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: prod
+    container_name: acquisitions-app-prod
+    # Production env vars (including DATABASE_URL) come from .env.production
+    env_file:
+      - .env.production
+    environment:
+      NODE_ENV: production
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+
+networks:
+  default:
+    name: acquisitions-prod-net

@@ -29,3 +29,4 @@ Dockerfile
 *.sln
 *.sw?
 
+.neon_local/

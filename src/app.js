@@ -5,6 +5,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import logger from './config/logger.js';
 import authRouter from './routes/auth.routes.js';
+import securityMiddleware from './middleware/security.middlewar.js';
 
 
 const app = express();  // Initializes your HTTP server. -- Everything (routes, middleware, error handling) attaches to this object. 
@@ -23,6 +24,7 @@ app.use(cookieParser()); // Parses cookies into req.cookies
 // morgan + winston – Request logging (CRITICAL)
 app.use(morgan('combined', { stream: { write: (message) => logger.info(message.trim()) }}));
 
+app.use(securityMiddleware)
 app.get('/', (req, res) => {
   logger.info('Hello from Acquisitions!');
   res.status(200).send('Hello from Acquisitions!');
