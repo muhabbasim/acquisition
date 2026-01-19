@@ -28,12 +28,12 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # - name: Ensure DATABASE_URL is set
-      #   run: |
-      #     if [ -z "${DATABASE_URL:-}" ]; then
-      #       echo "DATABASE_URL is not set; using a dummy local URL for tests."
-      #       echo "DATABASE_URL=postgres://neon:npg@localhost:5432/acquisitions" >> "$GITHUB_ENV"
-      #     fi
+      - name: Ensure DATABASE_URL is set
+        run: |
+          if [ -z '${DATABASE_URL:-}' ]; then
+            echo 'DATABASE_URL is not set; using a dummy local URL for tests.'
+            echo 'DATABASE_URL=postgres://neon:npg@localhost:5432/acquisitions' >> '$GITHUB_ENV'
+          fi
 
       - name: Run tests
         id: run-tests
@@ -57,8 +57,8 @@ jobs:
       - name: Add test failure summary and annotation
         if: failure()
         run: |
-          echo "::error title=Tests failed::One or more tests failed. See the test logs and the 'coverage-report' artifact (if generated) for details." \
-            "You can reproduce locally with 'npm test'." 
-          echo "## Test Summary" >> "$GITHUB_STEP_SUMMARY"
-          echo "Status: FAILED" >> "$GITHUB_STEP_SUMMARY"
-          echo "One or more tests failed. Please inspect the test logs and the 'coverage-report' artifact (if generated)." >> "$GITHUB_STEP_SUMMARY"
+          echo '::error title=Tests failed::One or more tests failed. See the test logs and the 'coverage-report' artifact (if generated) for details.' \
+            'You can reproduce locally with 'npm test'.' 
+          echo '## Test Summary' >> '$GITHUB_STEP_SUMMARY'
+          echo 'Status: FAILED' >> '$GITHUB_STEP_SUMMARY'
+          echo 'One or more tests failed. Please inspect the test logs and the 'coverage-report' artifact (if generated).' >> '$GITHUB_STEP_SUMMARY'
