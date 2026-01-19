@@ -16,7 +16,7 @@ dist-ssr
 
 .dockerignore
 .git 
-Dockerfile
+# Dockerfile
 
 # Editor directories and files
 .vscode/*
