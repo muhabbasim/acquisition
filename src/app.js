@@ -37,13 +37,11 @@ app.get('/', (req, res) => {
 
 // health chech
 app.get('/health', (req, res) => {
-  res
-    .status(200)
-    .json({
-      status: 'OK',
-      timestamp: new Date().toISOString(),
-      uptime: process.uptime(),
-    });
+  res.status(200).json({
+    status: 'OK',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+  });
 });
 app.get('/api', (req, res) => {
   res.status(200).json({ message: 'Aquisitions API is running!' });

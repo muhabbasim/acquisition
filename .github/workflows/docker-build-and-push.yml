@@ -5,10 +5,13 @@ on:
     branches: [main]
   workflow_dispatch:
 
+
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
 
+    env:
+      DOCKER_IMAGE: ${{ secrets.DOCKER_USERNAME }}/acquisitions
     permissions:
       contents: read
       packages: write
@@ -33,7 +36,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ secrets.DOCKER_IMAGE_NAME }}
+          images: ${{ env.DOCKER_IMAGE }}
           tags: |
             type=raw,value=latest
             type=ref,event=branch
@@ -53,12 +56,12 @@ jobs:
           platforms: linux/amd64,linux/arm64
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=registry,ref=${{ secrets.DOCKER_IMAGE_NAME }}:buildcache
-          cache-to: type=registry,ref=${{ secrets.DOCKER_IMAGE_NAME }}:buildcache,mode=max
+          cache-from: type=registry,ref=${{ env.DOCKER_IMAGE }}:buildcache
+          cache-to: type=registry,ref=${{ env.DOCKER_IMAGE }}:buildcache,mode=max
 
       - name: Append GitHub summary
         run: |
           echo "## Docker Image Publication" >> "$GITHUB_STEP_SUMMARY"
-          echo "Image: ${{ secrets.DOCKER_IMAGE_NAME }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "Image: ${{ env.DOCKER_IMAGE }}" >> "$GITHUB_STEP_SUMMARY"
           echo "Tags:" >> "$GITHUB_STEP_SUMMARY"
           echo "${{ steps.meta.outputs.tags }}" >> "$GITHUB_STEP_SUMMARY"
