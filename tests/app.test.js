@@ -1,5 +1,5 @@
 import request from 'supertest';
-import { jest } from '@jest/globals';
+import { jest, test } from '@jest/globals';
 
 // Mock the Arcjet-based security middleware so it doesn't call external services
 jest.unstable_mockModule('../src/middleware/security.middlewar.js', () => ({
@@ -44,12 +44,10 @@ describe('App basic routes', () => {
 describe('Auth routes validation and basic behaviour', () => {
   test('POST /api/auth/sign-up with invalid payload returns 400', async () => {
     // Missing name and invalid email
-    const res = await request(app)
-      .post('/api/auth/sign-up')
-      .send({
-        email: 'not-an-email',
-        password: '123',
-      });
+    const res = await request(app).post('/api/auth/sign-up').send({
+      email: 'not-an-email',
+      password: '123',
+    });
 
     expect(res.status).toBe(400);
     expect(res.body).toHaveProperty('error', 'Validation failed');
@@ -58,11 +56,9 @@ describe('Auth routes validation and basic behaviour', () => {
 
   test('POST /api/auth/sign-in with invalid payload returns 400', async () => {
     // Missing password
-    const res = await request(app)
-      .post('/api/auth/sign-in')
-      .send({
-        email: 'user@example.com',
-      });
+    const res = await request(app).post('/api/auth/sign-in').send({
+      email: 'user@example.com',
+    });
 
     expect(res.status).toBe(400);
     expect(res.body).toHaveProperty('error', 'Validation failed');
@@ -76,7 +72,6 @@ describe('Auth routes validation and basic behaviour', () => {
     expect(res.body).toEqual({ message: 'User logged out' });
   });
 });
-
 
 // describe('API endpoints', () => {
 //   describe('GET / health', () => {

@@ -1,5 +1,5 @@
-import logger from "../config/logger.js";
-import { jwtToken } from "../utils/jwt.js";
+import logger from '../config/logger.js';
+import { jwtToken } from '../utils/jwt.js';
 
 export const authenticateToken = (req, res, next) => {
   try {
@@ -48,7 +48,7 @@ export const requireRole = allowedRoles => {
         logger.warn(
           `Access denied for user ${req.user.email} with role ${req.user.role}. Required: ${allowedRoles.join(', ')}`
         );
-        
+
         return res.status(403).json({
           error: 'Access denied',
           message: 'Insufficient permissions',

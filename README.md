@@ -99,14 +99,14 @@ PARENT_BRANCH_ID=your_parent_branch_id_here
 `docker-compose.dev.yml` orchestrates the local dev environment:
 
 ```yaml
-version: "3.9"
+version: '3.9'
 
 services:
   neon-local:
     image: neondatabase/neon_local:latest
     container_name: neon-local
     ports:
-      - "5432:5432"
+      - '5432:5432'
     env_file:
       - .env.development
 
@@ -122,9 +122,9 @@ services:
       - .env.development
     environment:
       DATABASE_URL: ${DATABASE_URL:-postgres://neon:npg@neon-local:5432/acquisitions}
-    command: ["node", "--watch", "src/server.js"]
+    command: ['node', '--watch', 'src/server.js']
     ports:
-      - "3000:3000"
+      - '3000:3000'
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
@@ -171,14 +171,14 @@ If you use the Neon **serverless** driver (`@neondatabase/serverless`), configur
 Example:
 
 ```js
-import { neon, neonConfig } from '@neondatabase/serverless'
+import { neon, neonConfig } from '@neondatabase/serverless';
 
 // In Docker dev, "neon-local" is the service name
-neonConfig.fetchEndpoint = 'http://neon-local:5432/sql'
-neonConfig.useSecureWebSocket = false
-neonConfig.poolQueryViaFetch = true
+neonConfig.fetchEndpoint = 'http://neon-local:5432/sql';
+neonConfig.useSecureWebSocket = false;
+neonConfig.poolQueryViaFetch = true;
 
-const sql = neon(process.env.DATABASE_URL)
+const sql = neon(process.env.DATABASE_URL);
 ```
 
 - In dev, `process.env.DATABASE_URL` is the Neon Local URL.
@@ -208,7 +208,7 @@ DATABASE_URL=postgres://user:password@your-project-region.neon.tech/acquisitions
 `docker-compose.prod.yml` runs only the app; the database is the managed Neon Cloud service.
 
 ```yaml
-version: "3.9"
+version: '3.9'
 
 services:
   app:
@@ -222,7 +222,7 @@ services:
     environment:
       NODE_ENV: production
     ports:
-      - "3000:3000"
+      - '3000:3000'
     restart: unless-stopped
 ```
 

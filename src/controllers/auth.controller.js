@@ -6,20 +6,19 @@ import { jwtToken } from '../utils/jwt.js';
 import { signupSchema, signInSchema } from '../validations/autn.validation.js';
 
 export const signUp = async (req, res, next) => {
-
   try {
     const validationResult = signupSchema.safeParse(req.body);
 
-    if(!validationResult.success) {
+    if (!validationResult.success) {
       return res.status(400).json({
         error: 'Validation failed',
-        details: formatValidationError(validationResult.error)
+        details: formatValidationError(validationResult.error),
       });
     }
 
     const { name, email, role, password } = validationResult.data;
     const newUser = await createUser({ name, email, password, role });
- 
+
     const token = jwtToken.sign({
       id: newUser.id,
       name: newUser.name,
@@ -27,24 +26,23 @@ export const signUp = async (req, res, next) => {
       role: newUser.role,
     });
 
-    cookies.set( res, 'token', token );
+    cookies.set(res, 'token', token);
 
     // Auth service
     logger.info(`User registeratoin successfully: ${email}`);
     res.status(201).json({
-      message: 'User registered', 
+      message: 'User registered',
       user: {
-        id: newUser.id, 
-        name: newUser.name, 
-        email: newUser.email, 
-        role: newUser.role
-      }
+        id: newUser.id,
+        name: newUser.name,
+        email: newUser.email,
+        role: newUser.role,
+      },
     });
-
   } catch (error) {
     logger.error('Signup error', error);
 
-    if(error.message === 'User with this email already exist') {
+    if (error.message === 'User with this email already exist') {
       return res.status(409).json({ error: 'Email already exist' });
     }
 
@@ -54,13 +52,12 @@ export const signUp = async (req, res, next) => {
 
 export const signIn = async (req, res, next) => {
   try {
-
     const validationResult = signInSchema.safeParse(req.body);
 
     if (!validationResult.success) {
       return res.status(400).json({
         error: 'Validation failed',
-        details: formatValidationError(validationResult.error)
+        details: formatValidationError(validationResult.error),
       });
     }
 
@@ -84,7 +81,7 @@ export const signIn = async (req, res, next) => {
         name: user.name,
         email: user.email,
         role: user.role,
-      }
+      },
     });
   } catch (error) {
     logger.error('Signin error', error);

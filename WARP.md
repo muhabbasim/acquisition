@@ -5,6 +5,7 @@ This file provides guidance to WARP (warp.dev) when working with code in this re
 ## Core workflows
 
 ### Node app (local, no Docker)
+
 - Install dependencies:
   - `npm install`
 - Run the API in watch mode:
@@ -14,6 +15,7 @@ This file provides guidance to WARP (warp.dev) when working with code in this re
   - `npm start`
 
 ### Linting & formatting
+
 - Lint all JS using the local ESLint config (`eslint.config.js`):
   - `npm run lint`
 - Auto-fix lint errors where possible:
@@ -24,6 +26,7 @@ This file provides guidance to WARP (warp.dev) when working with code in this re
   - `npm run format:check`
 
 ### Database & migrations (Drizzle + Neon)
+
 - Drizzle is configured via `drizzle.config.js`:
   - Schema files: `src/models/*.js` (e.g., `src/models/user.model.js`).
   - Migrations directory: `drizzle/`.
@@ -38,6 +41,7 @@ This file provides guidance to WARP (warp.dev) when working with code in this re
 ### Docker-based workflows
 
 #### Dev stack with Neon Local
+
 - Compose file: `docker-compose.dev.yml`.
 - Services:
   - `neon-local`: Neon Local Postgres proxy.
@@ -50,6 +54,7 @@ This file provides guidance to WARP (warp.dev) when working with code in this re
   - `docker compose -f docker-compose.dev.yml down`
 
 #### Dev helper script
+
 - Script: `scripts/dev.sh`.
 - What it does:
   - Validates `.env.development` exists.
@@ -62,6 +67,7 @@ This file provides guidance to WARP (warp.dev) when working with code in this re
   - `npm run dev:docker`
 
 #### Prod stack (containerized app pointing at Neon Cloud)
+
 - Compose file: `docker-compose.prod.yml`.
 - Service:
   - `app`: Node API built from the `prod` stage in `Dockerfile`.
@@ -73,6 +79,7 @@ This file provides guidance to WARP (warp.dev) when working with code in this re
   - Tear down: `docker compose -f docker-compose.prod.yml down`
 
 #### Prod helper script (note: currently dev-like)
+
 - Script: `scripts/prod.sh`.
 - Behavior today is mostly development-oriented:
   - References `.env.development` and `docker-compose.dev.yml`, and prints mixed dev/prod messaging.
@@ -81,6 +88,7 @@ This file provides guidance to WARP (warp.dev) when working with code in this re
   - `npm run prod:docker`
 
 ### Environment configuration
+
 - Development:
   - `.env.development` provides `DATABASE_URL` for Neon Local and credentials for the Neon Local proxy.
   - The dev compose file maps `DATABASE_URL` into the app container, defaulting to a Neon Local connection string if not set.
@@ -91,11 +99,13 @@ This file provides guidance to WARP (warp.dev) when working with code in this re
 ## High-level architecture
 
 ### Overview
+
 - This is a small Node.js/Express HTTP API.
 - Persistence is via Neon-hosted Postgres, accessed using the Neon HTTP driver (`@neondatabase/serverless`) and Drizzle ORM.
 - The app is designed to run both locally (with Neon Local) and in production (against Neon Cloud) using Docker.
 
 ### Entrypoints & server wiring
+
 - `src/index.js`
   - Loads environment variables via `dotenv/config` and imports `./server.js`.
 - `src/server.js`
@@ -104,6 +114,7 @@ This file provides guidance to WARP (warp.dev) when working with code in this re
   - Creates the Express app and wires middleware, routes, and health endpoints.
 
 ### Middleware stack
+
 - Security & parsing (in order in `src/app.js`):
   - `helmet()` — sets security-related HTTP headers.
   - `cors()` — enables cross-origin requests (currently wide-open).
@@ -115,6 +126,7 @@ This file provides guidance to WARP (warp.dev) when working with code in this re
   - `securityMiddleware` from `src/middleware/security.middlewar.js` is applied globally via `app.use(securityMiddleware)`.
 
 ### Arcjet + rate limiting/security
+
 - Core configuration in `src/config/arcjet.js`:
   - Initializes a single Arcjet client (`aj`) with:
     - `shield({ mode: 'LIVE' })` to block common attack patterns.
@@ -134,6 +146,7 @@ This file provides guidance to WARP (warp.dev) when working with code in this re
   - Logs all denials via the shared `logger` with IP, user agent and path.
 
 ### Logging
+
 - Configured in `src/config/logger.js` using Winston.
 - Characteristics:
   - Default level is `process.env.LOG_LEVEL || 'info'`.
@@ -143,6 +156,7 @@ This file provides guidance to WARP (warp.dev) when working with code in this re
 - HTTP access logs from Morgan are routed through this same logger.
 
 ### Database access layer
+
 - Connection config: `src/config/database.js`.
   - Creates a Neon SQL client using `neon(process.env.DATABASE_URL)`.
   - Wraps it with Drizzle via `drizzle(sql)` and exports `db` and `sql`.
@@ -155,6 +169,7 @@ This file provides guidance to WARP (warp.dev) when working with code in this re
 ### Request lifecycle & domain layers
 
 #### Auth flow
+
 - Routes: `src/routes/auth.routes.js` mounted at `/api/auth` in `src/app.js`.
   - `POST /api/auth/sign-up` → `signUp` controller.
   - `POST /api/auth/sign-in` → `signIn` controller.
@@ -177,6 +192,7 @@ This file provides guidance to WARP (warp.dev) when working with code in this re
     - `createUser` checks for existing user by email, hashes the password, and inserts a new row returning a subset of columns.
 
 #### User resource flow
+
 - Routes: `src/routes/users.routes.js` mounted at `/api/users`.
   - `GET /api/users/get-users` → fetch all users.
   - `GET /api/users/:id` → fetch a single user.
@@ -193,18 +209,21 @@ This file provides guidance to WARP (warp.dev) when working with code in this re
   - Always return shaped objects with only public fields (no password).
 
 ### Utility modules
+
 - `src/utils/cookies.js` — shared cookie options and helpers for setting/clearing/getting cookies.
 - `src/utils/format.js` — formats Zod validation errors to human-readable strings.
 - `src/utils/jwt.js` — wraps `jsonwebtoken` sign/verify with logging and a fixed expiry.
 - `src/validations/autn.validation.js` — Zod schemas for signup / signin payloads.
 
 ### Health and diagnostics
+
 - Implemented in `src/app.js`:
   - `GET /` — simple plaintext greeting.
   - `GET /health` — JSON health check: `{ status, timestamp, uptime }`.
   - `GET /api` — simple JSON message indicating the API is running.
 
 ## Testing
+
 - Test runner: Jest, configured via `jest.config.mjs`.
 - Run the full test suite: `npm test`.
 - Run a single test file: `npm test -- path/to/your.test.js`.

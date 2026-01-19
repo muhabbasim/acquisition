@@ -1,4 +1,4 @@
-version: "3.9"
+version: '3.9'
 
 services:
   neon-local:
@@ -6,7 +6,7 @@ services:
     container_name: neon-local
     # Expose Neon Local on localhost:5432 for tools like psql
     ports:
-      - "5432:5432"
+      - '5432:5432'
     # All required env vars are loaded from .env.development
     env_file:
       - .env.development
@@ -26,7 +26,7 @@ services:
       DATABASE_URL: ${DATABASE_URL:-postgres://neon:npg@neon-local:5432/acquisitions}
     # command: ["node", "--watch", "src/server.js"]
     ports:
-      - "3000:3000"
+      - '3000:3000'
     # Live-reload friendly: mount source into container
     volumes:
       - .:/usr/src/app

@@ -1,5 +1,8 @@
-import { jest } from '@jest/globals';
-import { authenticateToken, requireRole } from '../src/middleware/auth.middleware.js';
+import { jest, test } from '@jest/globals';
+import {
+  authenticateToken,
+  requireRole,
+} from '../src/middleware/auth.middleware.js';
 import { jwtToken } from '../src/utils/jwt.js';
 
 describe('authenticateToken middleware', () => {
@@ -15,7 +18,7 @@ describe('authenticateToken middleware', () => {
 
     expect(res.status).toHaveBeenCalledWith(401);
     expect(res.json).toHaveBeenCalledWith(
-      expect.objectContaining({ error: 'Authentication required' }),
+      expect.objectContaining({ error: 'Authentication required' })
     );
     expect(next).not.toHaveBeenCalled();
   });
@@ -29,7 +32,9 @@ describe('authenticateToken middleware', () => {
     };
     const next = jest.fn();
 
-    const verifySpy = jest.spyOn(jwtToken, 'verify').mockReturnValue(userPayload);
+    const verifySpy = jest
+      .spyOn(jwtToken, 'verify')
+      .mockReturnValue(userPayload);
 
     authenticateToken(req, res, next);
 
@@ -55,7 +60,7 @@ describe('requireRole middleware', () => {
 
     expect(res.status).toHaveBeenCalledWith(401);
     expect(res.json).toHaveBeenCalledWith(
-      expect.objectContaining({ error: 'Authentication required' }),
+      expect.objectContaining({ error: 'Authentication required' })
     );
     expect(next).not.toHaveBeenCalled();
   });
@@ -73,7 +78,7 @@ describe('requireRole middleware', () => {
 
     expect(res.status).toHaveBeenCalledWith(403);
     expect(res.json).toHaveBeenCalledWith(
-      expect.objectContaining({ error: 'Access denied' }),
+      expect.objectContaining({ error: 'Access denied' })
     );
     expect(next).not.toHaveBeenCalled();
   });

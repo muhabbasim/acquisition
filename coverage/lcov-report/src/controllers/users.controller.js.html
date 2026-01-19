@@ -453,27 +453,27 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import logger from "../config/logger.js"
-import { getAllUsers, getUser, updateUser, deleteUser } from "../services/users.services.js"
-import { formatValidationError } from "../utils/format.js"
-import { updateUserSchema, userIdSchema } from "../validations/users.validation.js"
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import logger from '../config/logger.js';
+import { getAllUsers, getUser, updateUser, deleteUser } from '../services/users.services.js';
+import { formatValidationError } from '../utils/format.js';
+import { updateUserSchema, userIdSchema } from '../validations/users.validation.js';
 &nbsp;
 export const fetchAllUsrs = <span class="fstat-no" title="function not covered" >async (req, res, next) =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >  try {</span>
-<span class="cstat-no" title="statement not covered" >    logger.info("Getting users...")</span>
+<span class="cstat-no" title="statement not covered" >    logger.info('Getting users...');</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    const allUsers = await getAllUsers()</span>
+<span class="cstat-no" title="statement not covered" >    const allUsers = await getAllUsers();</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >    res.json({</span>
 <span class="cstat-no" title="statement not covered" >      message: 'Successfully retrieved users',</span>
 <span class="cstat-no" title="statement not covered" >      usres: allUsers,</span>
 <span class="cstat-no" title="statement not covered" >      count: allUsers.length</span>
-<span class="cstat-no" title="statement not covered" >    })</span>
+<span class="cstat-no" title="statement not covered" >    });</span>
 <span class="cstat-no" title="statement not covered" >  } catch (error) {</span>
-<span class="cstat-no" title="statement not covered" >    logger.error(error)</span>
-<span class="cstat-no" title="statement not covered" >    next(error)</span>
+<span class="cstat-no" title="statement not covered" >    logger.error(error);</span>
+<span class="cstat-no" title="statement not covered" >    next(error);</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
-<span class="cstat-no" title="statement not covered" >}</span>
+<span class="cstat-no" title="statement not covered" >};</span>
 &nbsp;
 export const fetchUserById = <span class="fstat-no" title="function not covered" >async (req, res, next) =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >  try {</span>
@@ -490,27 +490,27 @@ export const fetchUserById = <span class="fstat-no" title="function not covered"
 <span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >    const { id } = validationResult.data;</span>
-<span class="cstat-no" title="statement not covered" >    const user = await getUser(id)</span>
+<span class="cstat-no" title="statement not covered" >    const user = await getUser(id);</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >    if (!user) {</span>
-<span class="cstat-no" title="statement not covered" >      return res.status(404).json({ message: 'User not found' })</span>
+<span class="cstat-no" title="statement not covered" >      return res.status(404).json({ message: 'User not found' });</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >    logger.info(`User ${user.email} retrieved successfully`);</span>
 <span class="cstat-no" title="statement not covered" >    res.json({</span>
 <span class="cstat-no" title="statement not covered" >      message: 'Successfully retrieved user',</span>
 <span class="cstat-no" title="statement not covered" >      user,</span>
-<span class="cstat-no" title="statement not covered" >    })</span>
+<span class="cstat-no" title="statement not covered" >    });</span>
 <span class="cstat-no" title="statement not covered" >  } catch (error) {</span>
-<span class="cstat-no" title="statement not covered" >    logger.error(`Error fetching user by id: ${e.message}`);</span>
+<span class="cstat-no" title="statement not covered" >    logger.error(`Error fetching user by id: ${error.message}`);</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >    if (error.message === 'User not found') {</span>
 <span class="cstat-no" title="statement not covered" >      return res.status(404).json({ error: 'User not found' });</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    next(e);</span>
+<span class="cstat-no" title="statement not covered" >    next(error);</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
-<span class="cstat-no" title="statement not covered" >}</span>
+<span class="cstat-no" title="statement not covered" >};</span>
 &nbsp;
 export const updateUserById = <span class="fstat-no" title="function not covered" >async (req, res, next) =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >  try {</span>
@@ -569,13 +569,13 @@ export const updateUserById = <span class="fstat-no" title="function not covered
 <span class="cstat-no" title="statement not covered" >      delete updates.role;</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" >  </span>
-<span class="cstat-no" title="statement not covered" >    const updatedUser = await updateUser(id, updates)</span>
+<span class="cstat-no" title="statement not covered" >    const updatedUser = await updateUser(id, updates);</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >    logger.info(`User ${updatedUser.email} updated successfully`);</span>
 <span class="cstat-no" title="statement not covered" >    res.json({</span>
 <span class="cstat-no" title="statement not covered" >      message: 'Successfully updated user',</span>
 <span class="cstat-no" title="statement not covered" >      user: updatedUser,</span>
-<span class="cstat-no" title="statement not covered" >    })</span>
+<span class="cstat-no" title="statement not covered" >    });</span>
 <span class="cstat-no" title="statement not covered" >  } catch (error) {</span>
 <span class="cstat-no" title="statement not covered" >    logger.error(`Error updating user: ${error.message}`);</span>
 <span class="cstat-no" title="statement not covered" ></span>
@@ -589,7 +589,7 @@ export const updateUserById = <span class="fstat-no" title="function not covered
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >    next(error);</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
-<span class="cstat-no" title="statement not covered" >}</span>
+<span class="cstat-no" title="statement not covered" >};</span>
 &nbsp;
 export const deleteUserById = <span class="fstat-no" title="function not covered" >async (req, res, next) =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >  try {</span>
@@ -639,15 +639,15 @@ export const deleteUserById = <span class="fstat-no" title="function not covered
 <span class="cstat-no" title="statement not covered" >      user: deletedUser,</span>
 <span class="cstat-no" title="statement not covered" >    });</span>
 <span class="cstat-no" title="statement not covered" >  } catch (error) {</span>
-<span class="cstat-no" title="statement not covered" >    logger.error(`Error deleting user: ${e.message}`);</span>
+<span class="cstat-no" title="statement not covered" >    logger.error(`Error deleting user: ${error.message}`);</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >    if (error.message === 'User not found') {</span>
 <span class="cstat-no" title="statement not covered" >      return res.status(404).json({ error: 'User not found' });</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    next(e);</span>
+<span class="cstat-no" title="statement not covered" >    next(error);</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
-<span class="cstat-no" title="statement not covered" >}</span>
+<span class="cstat-no" title="statement not covered" >};</span>
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -655,7 +655,7 @@ export const deleteUserById = <span class="fstat-no" title="function not covered
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-01-19T12:56:00.118Z
+                at 2026-01-19T13:57:49.575Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

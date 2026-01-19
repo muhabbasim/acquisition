@@ -1,24 +1,32 @@
-import logger from "../config/logger.js"
-import { getAllUsers, getUser, updateUser, deleteUser } from "../services/users.services.js"
-import { formatValidationError } from "../utils/format.js"
-import { updateUserSchema, userIdSchema } from "../validations/users.validation.js"
+import logger from '../config/logger.js';
+import {
+  getAllUsers,
+  getUser,
+  updateUser,
+  deleteUser,
+} from '../services/users.services.js';
+import { formatValidationError } from '../utils/format.js';
+import {
+  updateUserSchema,
+  userIdSchema,
+} from '../validations/users.validation.js';
 
 export const fetchAllUsrs = async (req, res, next) => {
   try {
-    logger.info("Getting users...")
+    logger.info('Getting users...');
 
-    const allUsers = await getAllUsers()
+    const allUsers = await getAllUsers();
 
     res.json({
       message: 'Successfully retrieved users',
       usres: allUsers,
-      count: allUsers.length
-    })
+      count: allUsers.length,
+    });
   } catch (error) {
-    logger.error(error)
-    next(error)
+    logger.error(error);
+    next(error);
   }
-}
+};
 
 export const fetchUserById = async (req, res, next) => {
   try {
@@ -35,31 +43,30 @@ export const fetchUserById = async (req, res, next) => {
     }
 
     const { id } = validationResult.data;
-    const user = await getUser(id)
+    const user = await getUser(id);
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found' })
+      return res.status(404).json({ message: 'User not found' });
     }
 
     logger.info(`User ${user.email} retrieved successfully`);
     res.json({
       message: 'Successfully retrieved user',
       user,
-    })
+    });
   } catch (error) {
-    logger.error(`Error fetching user by id: ${e.message}`);
+    logger.error(`Error fetching user by id: ${error.message}`);
 
     if (error.message === 'User not found') {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    next(e);
+    next(error);
   }
-}
+};
 
 export const updateUserById = async (req, res, next) => {
   try {
-
     logger.info(`Updating user: ${req.params.id}`);
 
     // Validate the user ID parameter
@@ -113,14 +120,14 @@ export const updateUserById = async (req, res, next) => {
     if (req.user.role !== 'admin') {
       delete updates.role;
     }
-  
-    const updatedUser = await updateUser(id, updates)
+
+    const updatedUser = await updateUser(id, updates);
 
     logger.info(`User ${updatedUser.email} updated successfully`);
     res.json({
       message: 'Successfully updated user',
       user: updatedUser,
-    })
+    });
   } catch (error) {
     logger.error(`Error updating user: ${error.message}`);
 
@@ -134,7 +141,7 @@ export const updateUserById = async (req, res, next) => {
 
     next(error);
   }
-}
+};
 
 export const deleteUserById = async (req, res, next) => {
   try {
@@ -184,12 +191,12 @@ export const deleteUserById = async (req, res, next) => {
       user: deletedUser,
     });
   } catch (error) {
-    logger.error(`Error deleting user: ${e.message}`);
+    logger.error(`Error deleting user: ${error.message}`);
 
     if (error.message === 'User not found') {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    next(e);
+    next(error);
   }
-}
+};

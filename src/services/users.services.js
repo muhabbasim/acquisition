@@ -1,7 +1,7 @@
-import { eq } from "drizzle-orm"
-import { db } from "../config/database.js"
-import logger from "../config/logger.js"
-import { users } from "../models/user.model.js"
+import { eq } from 'drizzle-orm';
+import { db } from '../config/database.js';
+import logger from '../config/logger.js';
+import { users } from '../models/user.model.js';
 
 export const getAllUsers = async () => {
   try {
@@ -14,14 +14,14 @@ export const getAllUsers = async () => {
         created_at: users.created_at,
         updated_at: users.updated_at,
       })
-      .from(users)
+      .from(users);
   } catch (error) {
-    logger.error('Error getting users', error)
-    throw error
+    logger.error('Error getting users', error);
+    throw error;
   }
-}
+};
 
-export const getUser = async (id) => {
+export const getUser = async id => {
   try {
     const [user] = await db
       .select({
@@ -33,15 +33,15 @@ export const getUser = async (id) => {
         updated_at: users.updated_at,
       })
       .from(users)
-      .where(eq(users.id, id)).limit(1)
+      .where(eq(users.id, id))
+      .limit(1);
 
-      
-    return user
+    return user;
   } catch (error) {
-    logger.error('Error getting user by id', error)
-    throw error
+    logger.error('Error getting user by id', error);
+    throw error;
   }
-}
+};
 
 export const updateUser = async (id, data) => {
   try {
@@ -79,14 +79,14 @@ export const updateUser = async (id, data) => {
       });
 
     logger.info(`User ${updatedUser.email} updated successfully`);
-    return updatedUser
+    return updatedUser;
   } catch (error) {
-    logger.error('Error updating user', error)
-    throw error
+    logger.error('Error updating user', error);
+    throw error;
   }
-}
+};
 
-export const deleteUser = async (id) => {
+export const deleteUser = async id => {
   try {
     // First check if user exists
     await getUser(id);
@@ -99,12 +99,12 @@ export const deleteUser = async (id) => {
         email: users.email,
         name: users.name,
         role: users.role,
-      })
-      
+      });
+
     logger.info(`User ${deletedUser.email} deleted successfully`);
-    return deletedUser
+    return deletedUser;
   } catch (error) {
-    logger.error('Error deleting user', error)
-    throw error
+    logger.error('Error deleting user', error);
+    throw error;
   }
-}
+};
