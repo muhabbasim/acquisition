@@ -77,6 +77,8 @@ This file provides guidance to WARP (warp.dev) when working with code in this re
 - Behavior today is mostly development-oriented:
   - References `.env.development` and `docker-compose.dev.yml`, and prints mixed dev/prod messaging.
 - Treat this script as a convenience wrapper around the dev stack unless it is corrected to use `.env.production` and `docker-compose.prod.yml`.
+- Run it from the repo root:
+  - `npm run prod:docker`
 
 ### Environment configuration
 - Development:
@@ -203,5 +205,8 @@ This file provides guidance to WARP (warp.dev) when working with code in this re
   - `GET /api` — simple JSON message indicating the API is running.
 
 ## Testing
-- There is currently no configured test runner or `npm test` script.
-- ESLint is configured to be test-aware under `tests/**/*.js`, so if you add tests there, linting will recognize common test globals.
+- Test runner: Jest, configured via `jest.config.mjs`.
+- Run the full test suite: `npm test`.
+- Run a single test file: `npm test -- path/to/your.test.js`.
+- Filter tests by name pattern: `npm test -- --testNamePattern="partial name"`.
+- Jest is configured for coverage by default (output in `coverage/`).

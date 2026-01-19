@@ -15,6 +15,7 @@ const app = express();  // Initializes your HTTP server. -- Everything (routes, 
 //   origin: ['http://localhost:3000'],
 //   credentials: true,
 // })); // Allows browsers to call your API from another domain -- without this Browser blocks requests (CORS error)
+
 app.use(helmet()); // Security headers (VERY important) XSS (Cross-Site Scripting) -- Clickjacking, MIME sniffing, Unsafe iframe usage
 app.use(cors());  // Allows browsers to call your API from another domain -- without this Browser blocks requests (CORS error)
 app.use(express.json()); // Parses application/json request bodies. -- Makes data available in req.body.
@@ -41,6 +42,13 @@ app.get('/api', (req, res) => {
 
 app.use('/api/auth', authRouter);
 app.use('/api/users', usersRouter);
+
+app.use((req, res) => {
+  res.status(404).json({
+    error: "Route not found"
+  })
+})
+
 
 export default app;
 

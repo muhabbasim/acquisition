@@ -1,0 +1,57 @@
+name: Tests
+
+on:
+  push:
+    branches: [main, staging]
+  pull_request:
+    branches: [main, staging]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      NODE_ENV: test
+      NODE_OPTIONS: --experimental-vm-modules
+      # Configure this secret in your repository or organization settings
+      DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        id: run-tests
+        run: npm test
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage
+          retention-days: 30
+
+      - name: Add test success summary
+        if: success()
+        run: |
+          echo "## Test Summary" >> "$GITHUB_STEP_SUMMARY"
+          echo "Status: PASSED" >> "$GITHUB_STEP_SUMMARY"
+          echo "Coverage report has been uploaded as the 'coverage-report' artifact." >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Add test failure summary and annotation
+        if: failure()
+        run: |
+          echo "::error title=Tests failed::One or more tests failed. See the test logs and the 'coverage-report' artifact (if generated) for details." \
+            "You can reproduce locally with 'npm test'." 
+          echo "## Test Summary" >> "$GITHUB_STEP_SUMMARY"
+          echo "Status: FAILED" >> "$GITHUB_STEP_SUMMARY"
+          echo "One or more tests failed. Please inspect the test logs and the 'coverage-report' artifact (if generated)." >> "$GITHUB_STEP_SUMMARY"
